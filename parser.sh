@@ -8,7 +8,7 @@ then
     trap 'rm -f "$lockfile"; exit $?' INT TERM EXIT
     while true
     do
-#rm -f $report
+rm -f $report
 read lastline < $linefile
 startline=$lastline
 currentdate=`date '+%s'`
