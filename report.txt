@@ -1,0 +1,82 @@
+From root@bash.localdomain  Fri Nov 29 16:09:15 2019
+Return-Path: <root@bash.localdomain>
+X-Original-To: root@localhost
+Delivered-To: root@localhost.localdomain
+Received: by bash.localdomain (Postfix, from userid 0)
+        id 17C8D6184; Fri, 29 Nov 2019 16:09:15 +0000 (UTC)
+Message-Id: <20191129160915.17C8D6184@bash.localdomain>
+Date: Fri, 29 Nov 2019 16:09:15 +0000 (UTC)
+From: root@bash.localdomain (root)
+
+START TIME  29 Nov 2019:11:02:09
+END TIME  29 Nov 2019:16:06:37
+Top 10 IP
+     39  : 109.236.252.130
+     16  : 95.165.18.146
+     12  : 62.210.252.196
+     11  : 87.250.233.68
+      5  : 93.158.167.130
+      5  : 62.75.198.172
+      3  : 95.108.181.93
+      3  : 67.205.140.232
+      3  : 64.20.39.18
+      3  : 60.208.103.154
+Top 10 URL
+     40  : /wp-login.php
+     37  : /
+     20  : /xmlrpc.php
+      4  : /robots.txt
+      3  : 400
+      3  : /wp-includes/js/wp-embed.min.js?ver=5.0.4
+      3  : /wp-admin/admin-post.php?page=301bulkoptions
+      3  : /wp-admin/admin-ajax.php?page=301bulkoptions
+      3  : /favicon.ico
+      3  : /1
+Codes
+    151  : 200
+     25  : 301
+     12  : 404
+      5  : 400
+Errors
+     12  : 404
+      5  : 400
+
+From root@bash.localdomain  Fri Nov 29 16:53:34 2019
+Return-Path: <root@bash.localdomain>
+X-Original-To: root@localhost
+Delivered-To: root@localhost.localdomain
+Received: by bash.localdomain (Postfix, from userid 0)
+        id 131EC6184; Fri, 29 Nov 2019 16:53:34 +0000 (UTC)
+Message-Id: <20191129165334.131EC6184@bash.localdomain>
+Date: Fri, 29 Nov 2019 16:53:34 +0000 (UTC)
+From: root@bash.localdomain (root)
+
+START TIME  29 Nov 2019:16:06:37
+END TIME  29 Nov 2019:16:51:52
+Top 10 IP
+      3  : 37.97.241.247
+      3  : 104.248.10.36
+      2  : 164.132.119.83
+      1  : 93.158.167.130
+      1  : 87.250.233.75
+      1  : 87.250.233.68
+      1  : 66.249.64.202
+      1  : 5.160.111.41
+      1  : 46.229.168.146
+      1  : 46.229.168.142
+Top 10 URL
+      7  : /
+      4  : /wp-login.php
+      2  : /xmlrpc.php
+      1  : /tag/add-database/
+      1  : /2017/11/01/standby-recover-from-service/
+      1  : /2016/10/11/%D0%BC%D0%B8%D0%B3%D1%80%D0%B0%D1%86%D0%B8%D1%8F-%D0%B8%D0%B7-11g-%D0%B2-%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%B9%D0%BD%D0%B5%D1%80-12%D1%81/
+Codes
+     11  : 200
+      3  : 301
+      1  : 404
+      1  : 304
+Errors
+      1  : 404
+
+
