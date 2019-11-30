@@ -1,13 +1,20 @@
 #!/bin/bash
-linefile=/var/log/dz6/line
-logfile=/var/log/dz6/access.log
-report=/var/log/dz6/report.txt
+logpath=/var/log/dz6
+logfile=$logpath/access.log
+report=$logpath/report.txt
 lockfile=/tmp/parserlockfile
 if ( set -o noclobber; echo "$$" > "$lockfile") 2> /dev/null;
 then
     trap 'rm -f "$lockfile"; exit $?' INT TERM EXIT
     while true
     do
+if [[ $(find /var/log/dz6 -type f -name "line") ]]
+then linefile=$(find $logpath/ -type f -name "line")
+else
+touch $logpath/line
+linefile=$(find $logpath/ -type f -name "line")
+echo "1" > $linefile
+fi
 rm -f $report
 read lastline < $linefile
 startline=$lastline

@@ -35,15 +35,15 @@
 
 ### обработка лога
 задаю переменные 
-linefile - файл с позицией в логе, logfile - сам лог, 
+logpath - путь к логу
+logfile - сам лог
 report - файл с отчетом полученным из скрипта, который отправлю на почту,
 parserlockfile - метка для защиты от повторного запуска
 
-
 	#!/bin/bash
-	linefile=/var/log/dz6/line
-	logfile=/var/log/dz6/access.log
-	report=/var/log/dz6/report.txt
+	logpath=/var/log/dz6
+	logfile=$logpath/access.log
+	report=$logpath/report.txt
 	lockfile=/tmp/parserlockfile
 
 условие защищающее от повторного запуска
@@ -53,6 +53,16 @@ parserlockfile - метка для защиты от повторного зап
 		trap 'rm -f "$lockfile"; exit $?' INT TERM EXIT
 		while true
 		do
+
+Определяю существует ли файл line с сохраненной меткой, если не существует создаю новый, и пишу в него "1"
+
+	if [[ $(find /var/log/dz6 -type f -name "line") ]]
+	then linefile=$(find $logpath/ -type f -name "line")
+	else
+		touch $logpath/line
+		linefile=$(find $logpath/ -type f -name "line")
+		echo "1" > $linefile
+	fi
 
 удаляю прошлый отчет, читаю сохраненную позицию в логе,
 делаю startline равной lastline
