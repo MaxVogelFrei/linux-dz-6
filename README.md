@@ -67,93 +67,91 @@ parserlockfile - метка для защиты от повторного зап
 удаляю прошлый отчет, читаю сохраненную позицию в логе,
 делаю startline равной lastline
 
-			rm -f $report
-			read lastline < $linefile
-			startline=$lastline
+	rm -f $report
+	read lastline < $linefile
+	startline=$lastline
 
 получаю текущую дату и дату из последней обработанной строки
 
-			currentdate=`date '+%s'`
-			timeinline=`date --date="$(awk -F" " -v line="$lastline" 'NR==line {print $4}' $logfile | sed -e 's/\[//;s/\// /g;s/:/ /')" '+%s'`
+	currentdate=`date '+%s'`
+	timeinline=`date --date="$(awk -F" " -v line="$lastline" 'NR==line {print $4}' $logfile | sed -e 's/\[//;s/\// /g;s/:/ /')" '+%s'`
 
 функция получающая новый номер строки соответствующей текущему времени для ограничения выборки из лога
 сравниваю значение от последнего запуска с текущим временем
 
-
-			function get_lastline {
-			var1=$1
-			var2=$2
-			if
-			[ "$var1" -lt "$var2" ]
-			then
+	function get_lastline {
+	var1=$1
+	var2=$2
+	if
+	[ "$var1" -lt "$var2" ]
+	then
 
 цикл "пока время считанное из строки меньше чем текущее -продолжаю, в другом случае ничего не делаю"
 
-			        while [ $var1 -lt $var2 ]
-			                do
-			                ((lastline++))
-			                var1=`date --date="$(awk -F" " -v line="$lastline" 'NR==line {print $4}' $logfile | sed -e 's/\[//;s/\// /g;s/:/ /')" '+%s'`
-			                done
-			else
-			        echo 'date in last line is not lower, nothing to do'
-			fi
+	       while [ $var1 -lt $var2 ]
+	                do
+	                ((lastline++))
+	                var1=`date --date="$(awk -F" " -v line="$lastline" 'NR==line {print $4}' $logfile | sed -e 's/\[//;s/\// /g;s/:/ /')" '+%s'`
+	                done
+	else
+	        echo 'date in last line is not lower, nothing to do'
+	fi
 
 как результат функция выдает номер строки - 1, т.к. последняя итерация  в цикле даст строку со временем больше, чем текущее
 
-			((lastline--))
-			return $lastline
-			}
+	((lastline--))
+	return $lastline
+	}
 
 передаю в функцию два значения "время из строки" и "текущее время"
 
-			get_lastline $timeinline $currentdate
+	get_lastline $timeinline $currentdate
 
 если номер строки на выходе совпадет с тем что я сохранил в переменную startline то выходим с ошибкой
 
-			if
-			[ "$lastline" -eq  "$startline" ]
-			then
-				exit 1
-			fi
+	if
+	[ "$lastline" -eq  "$startline" ]
+	then
+		exit 1
+	fi
 
 сохраняю номер строки в файл для следующего запуска
 
-			echo "$lastline" > "$linefile"
+	echo "$lastline" > "$linefile"
 
 формирую отчет, использую awk между startline и lastline
 делаю сортировку по порядку, считаю количество повторов
 сортирую по количеству повторов
 оставляю первую десятку
 
-			touch $report
-			awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1 {print "START TIME: " $4}; NR==line2 {print "END TIME: " $4}' $logfile | sed -e 's/\[//;s/\// /g;s/:/ /' > $report
-			echo "Top 10 IP" >> $report
-			awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 {print " : " $1}' $logfile  | sort | uniq -c | sort -rn | head -n 10 >> $report
-			echo "Top 10 URL" >> $report
-			awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 {print " : " $7}' $logfile  | sort | uniq -c | sort -rn | head -n 10 >> $report
+	touch $report
+	awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1 {print "START TIME: " $4}; NR==line2 {print "END TIME: " $4}' $logfile | sed -e 's/\[//;s/\// /g;s/:/ /' > $report
+	echo "Top 10 IP" >> $report
+	awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 {print " : " $1}' $logfile  | sort | uniq -c | sort -rn | head -n 10 >> $report
+	echo "Top 10 URL" >> $report
+	awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 {print " : " $7}' $logfile  | sort | uniq -c | sort -rn | head -n 10 >> $report
 
 для отображения кодов возврата дополнительно исключаю нечисловые записи
 
-			echo "Codes" >> $report
-			awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 { if (match($9,/[0-9][0-9][0-9]/,m)) print " : " m[0] }' $logfile  | sort | uniq -c | sort -rn >> $report
+	echo "Codes" >> $report
+	awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 { if (match($9,/[0-9][0-9][0-9]/,m)) print " : " m[0] }' $logfile  | sort | uniq -c | sort -rn >> $report
 
 для отображения ошибок дополнительно исключаю результаты кроме 4/5**
 
-			echo "Errors" >> $report
-			awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 { if (match($9,/[45]../,m)) print " : " m[0] }' $logfile  | sort | uniq -c | sort -rn >> $report
+	echo "Errors" >> $report
+	awk -F" " -v line1="$startline" -v line2="$lastline" 'NR==line1, NR==line2 { if (match($9,/[45]../,m)) print " : " m[0] }' $logfile  | sort | uniq -c | sort -rn >> $report
 
 отправляю на почту отчет
 
-			sendmail root@localhost < $report
-			cat $report
+	sendmail root@localhost < $report
+	cat $report
 
 после завершения удаляю метку
 
-			done
-			rm -f "$lockfile"
-			trap - INT TERM EXIT
+	done
+	rm -f "$lockfile"
+	trap - INT TERM EXIT
 	else
 	   echo "Failed to acquire lockfile: $lockfile."
 	   echo "Held by $(cat $lockfile)"
 	fi
-
